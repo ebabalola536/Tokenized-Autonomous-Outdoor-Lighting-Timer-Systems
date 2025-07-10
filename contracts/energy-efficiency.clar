@@ -92,7 +92,7 @@
 (define-public (register-fixture-energy (fixture-id uint))
   (let
     (
-      (current-time stacks-block-height)
+      (current-time block-height)
     )
     (asserts! (is-none (map-get? fixture-energy-data { fixture-id: fixture-id })) ERR-NOT-AUTHORIZED)
 
@@ -113,7 +113,7 @@
       { fixture-id: fixture-id }
       {
         total-rewards: u0,
-        last-reward-block: stacks-block-height,
+        last-reward-block: block-height,
         efficiency-streak: u0
       }
     )
@@ -127,7 +127,7 @@
     fixture-data
     (let
       (
-        (current-time stacks-block-height)
+        (current-time block-height)
         (new-total-consumption (+ (get total-consumption fixture-data) consumption))
         (new-operating-hours (+ (get operating-hours fixture-data) hours-active))
         (efficiency-rating (calculate-efficiency-rating consumption hours-active))
@@ -197,7 +197,7 @@
         (
           (efficiency-rating (get efficiency-rating fixture-data))
           (threshold-value (var-get efficiency-threshold))
-          (blocks-since-last-reward (- stacks-block-height (get last-reward-block reward-data)))
+          (blocks-since-last-reward (- block-height (get last-reward-block reward-data)))
           (reward-amount (if (>= efficiency-rating threshold-value)
             (* efficiency-rating blocks-since-last-reward)
             u0
@@ -211,7 +211,7 @@
           { fixture-id: fixture-id }
           (merge reward-data {
             total-rewards: (+ (get total-rewards reward-data) reward-amount),
-            last-reward-block: stacks-block-height,
+            last-reward-block: block-height,
             efficiency-streak: (+ (get efficiency-streak reward-data) u1)
           })
         )

@@ -72,7 +72,7 @@
 (define-private (calculate-uptime-percentage (last-heartbeat uint) (registered-at uint))
   (let
     (
-      (current-block stacks-block-height)
+      (current-block block-height)
       (total-time (- current-block registered-at))
       (downtime (- current-block last-heartbeat))
     )
@@ -100,7 +100,7 @@
 (define-public (register-fixture-health (fixture-id uint))
   (let
     (
-      (current-time stacks-block-height)
+      (current-time block-height)
     )
     (asserts! (is-none (map-get? fixture-health { fixture-id: fixture-id })) ERR-NOT-AUTHORIZED)
 
@@ -136,7 +136,7 @@
     health-data
     (let
       (
-        (current-time stacks-block-height)
+        (current-time block-height)
         (uptime-percentage (calculate-uptime-percentage current-time (get registered-at health-data)))
         (new-status (determine-health-status (get failure-count health-data) uptime-percentage))
       )
@@ -165,7 +165,7 @@
   (let
     (
       (report-id (var-get next-report-id))
-      (current-time stacks-block-height)
+      (current-time block-height)
     )
     (asserts! (and (>= severity u1) (<= severity u4)) ERR-INVALID-REPORT)
     (asserts! (> (len issue-type) u0) ERR-INVALID-REPORT)
@@ -253,7 +253,7 @@
     schedule-data
     (let
       (
-        (current-time stacks-block-height)
+        (current-time block-height)
         (next-maintenance-time (+ current-time u604800)) ;; 7 days from now
       )
       (asserts! (is-fixture-owner fixture-id tx-sender) ERR-NOT-AUTHORIZED)
@@ -326,7 +326,7 @@
     schedule-data
     (let
       (
-        (current-time stacks-block-height)
+        (current-time block-height)
         (next-maintenance (get next-maintenance schedule-data))
       )
       (>= current-time next-maintenance)
